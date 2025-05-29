@@ -1,54 +1,89 @@
-# AgentGemini Crew
+# agent_gemini
 
-Welcome to the AgentGemini Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+## Introduction
 
-## Installation
+`agent_gemini` is an application leveraging the crewAI framework to orchestrate AI agents for automated task execution. Its core capability is to define and run multi-agent crews to accomplish complex goals specified via configuration.
 
-Ensure you have Python >=3.10 <3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## Architecture Overview
 
-First, if you haven't already, install uv:
+The system is built upon the crewAI library, employing a configuration-driven approach to define agents, their roles, and the tasks they perform. It supports sequential task processing by default.
 
+## Core Components
+
+*   `src/agent_gemini/`: Primary module containing the application logic.
+    *   `main.py`: Serves as the application's main entry point, providing CLI commands for running, training, replaying, and testing agent crews.
+    *   `crew.py`: Defines the `AgentGemini` crew, including agent definitions (e.g., `researcher`, `reporting_analyst`) and task specifications (e.g., `research_task`, `reporting_task`) which are loaded from YAML configurations.
+    *   `config/agents.yaml` & `config/tasks.yaml`: Externalized YAML configuration files that define the properties, roles, goals of agents, and the description and expected outputs for tasks. These configurations support dynamic variable interpolation.
+    *   `tools/`: Designated directory for custom tools that can be integrated with agents to extend their capabilities. (Refer to `crewAI` documentation for tool integration).
+*   `knowledge/`: Intended for storing persistent information or knowledge bases that agents can utilize. (Refer to `crewAI` documentation for connecting knowledge sources).
+
+## Dependency Management and Build System
+
+*   `pyproject.toml`: Standard Python project definition file, specifying metadata, dependencies (primarily `crewai[tools]`), and project scripts. It utilizes `hatchling` as the build backend.
+*   `uv` & `uv.lock`: The project employs `uv`, a high-performance Python package installer and resolver, for dependency management. The `uv.lock` file ensures deterministic and reproducible builds.
+
+## Setup and Execution
+
+### Prerequisites
+
+*   Python 3.10-3.12
+
+### Virtual Environment
+
+1.  **Create:**
+    ```bash
+    python -m venv .venv
+    ```
+2.  **Activate:**
+    *   macOS/Linux:
+        ```bash
+        source .venv/bin/activate
+        ```
+    *   Windows:
+        ```bash
+        .venv\Scripts\activate
+        ```
+
+### Dependency Installation
+
+Install the package and its dependencies using `uv`:
 ```bash
-pip install uv
+uv pip install .
 ```
 
-Next, navigate to your project directory and install the dependencies:
+### Running the Application
 
-(Optional) Lock the dependencies and install them by using the CLI command:
+The primary method to execute the default crew behavior is:
 ```bash
-crewai install
+python src/agent_gemini/main.py
 ```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/agent_gemini/config/agents.yaml` to define your agents
-- Modify `src/agent_gemini/config/tasks.yaml` to define your tasks
-- Modify `src/agent_gemini/crew.py` to add your own logic, tools and specific args
-- Modify `src/agent_gemini/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
+Alternatively, use the configured script:
 ```bash
-$ crewai run
+agent_gemini
 ```
 
-This command initializes the agent_gemini Crew, assembling the agents and assigning them tasks as defined in your configuration.
+Other available commands (defined in `pyproject.toml` scripts):
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+*   `run_crew`: Executes the default crew behavior.
+    ```bash
+    agent_gemini run_crew
+    ```
+*   `train`: For training the crew.
+    ```bash
+    agent_gemini train <n_iterations> <filename>
+    ```
+    Example: `agent_gemini train 5 training_log.json`
+*   `replay`: For replaying a specific task.
+    ```bash
+    agent_gemini replay <task_id>
+    ```
+    Example: `agent_gemini replay research_task_uuid`
+*   `test`: For testing the crew.
+    ```bash
+    agent_gemini test <n_iterations> <eval_llm>
+    ```
+    Example: `agent_gemini test 10 gpt-4`
 
-## Understanding Your Crew
+## Output
 
-The agent_gemini Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
-
-## Support
-
-For support, questions, or feedback regarding the AgentGemini Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+The example `reporting_task` is configured to save its output to `report.md`.
