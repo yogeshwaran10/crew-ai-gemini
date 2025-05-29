@@ -27,63 +27,45 @@ The system is built upon the crewAI library, employing a configuration-driven ap
 ### Prerequisites
 
 *   Python 3.10-3.12
+*   `uv` (Python package installer, assumed to be installed for `uv venv`)
+*   `crewai` (Python package, assumed to be installed or bootstrapped for `crewai` commands)
 
-### Virtual Environment
+### 1. Create Virtual Environment
 
-1.  **Create:**
-    ```bash
-    python -m venv .venv
-    ```
-2.  **Activate:**
-    *   macOS/Linux:
-        ```bash
-        source .venv/bin/activate
-        ```
-    *   Windows:
-        ```bash
-        .venv\Scripts\activate
-        ```
+It is recommended to create a dedicated virtual environment for this project. Using `uv`, you can create an environment named `myenv` (or your preferred name) as follows:
 
-### Dependency Installation
-
-Install the package and its dependencies using `uv`:
 ```bash
-uv pip install .
+uv venv myenv
 ```
 
-### Running the Application
+### 2. Activate Virtual Environment
 
-The primary method to execute the default crew behavior is:
+Activate the newly created environment:
+
+*   **On macOS/Linux:**
+    ```bash
+    source myenv/bin/activate
+    ```
+*   **On Windows:**
+    ```bash
+    myenv\Scripts\activate
+    ```
+    *(Note: If you chose a different environment name, replace `myenv` with your chosen name in the activation command.)*
+
+### 3. Install Dependencies
+
+Once the environment is activated, install the project dependencies using the `crewai` CLI:
+
 ```bash
-python src/agent_gemini/main.py
+crewai install
 ```
-Alternatively, use the configured script:
+This command should handle the installation of all necessary packages defined in the `pyproject.toml` file.
+
+### 4. Run the Application
+
+To execute the main crew and start the agent tasks, use the `crewai` CLI:
+
 ```bash
-agent_gemini
+crewai run
 ```
-
-Other available commands (defined in `pyproject.toml` scripts):
-
-*   `run_crew`: Executes the default crew behavior.
-    ```bash
-    agent_gemini run_crew
-    ```
-*   `train`: For training the crew.
-    ```bash
-    agent_gemini train <n_iterations> <filename>
-    ```
-    Example: `agent_gemini train 5 training_log.json`
-*   `replay`: For replaying a specific task.
-    ```bash
-    agent_gemini replay <task_id>
-    ```
-    Example: `agent_gemini replay research_task_uuid`
-*   `test`: For testing the crew.
-    ```bash
-    agent_gemini test <n_iterations> <eval_llm>
-    ```
-    Example: `agent_gemini test 10 gpt-4`
-
-## Output
-
-The example `reporting_task` is configured to save its output to `report.md`.
+This command will initiate the configured crew process. Check the console for output and progress. The example `reporting_task` is configured to save its output to `report.md`.
