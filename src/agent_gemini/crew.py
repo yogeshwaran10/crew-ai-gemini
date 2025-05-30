@@ -2,6 +2,10 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
+
+from agent_gemini.tools.mongodb_tool import MongoDBReportStorageTool
+from agent_gemini.tools.serper_search_tool import SerperSearchTool
+
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -23,6 +27,7 @@ class AgentGemini():
     def researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['researcher'], # type: ignore[index]
+            tools=[SerperSearchTool()],
             verbose=True
         )
 
@@ -30,6 +35,7 @@ class AgentGemini():
     def reporting_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['reporting_analyst'], # type: ignore[index]
+            tools=[MongoDBReportStorageTool()],
             verbose=True
         )
 

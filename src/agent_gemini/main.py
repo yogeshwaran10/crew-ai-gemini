@@ -16,9 +16,9 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 def run():
     """
     Run the crew.
-    """
+    """ 
     inputs = {
-        'topic': 'AI LLMs',
+        'topic': 'Detetion of LLM Generated text',
         'current_year': str(datetime.now().year)
     }
     
